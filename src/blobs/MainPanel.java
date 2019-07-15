@@ -17,7 +17,7 @@ public class MainPanel extends JPanel implements Runnable{
 	private boolean running = true;
 	private BufferedImage image;
 	private Graphics2D g;
-	private int fps = 10;
+	private int fps = 60;
 	
 	public MainPanel () {
 		super();
@@ -46,17 +46,27 @@ public class MainPanel extends JPanel implements Runnable{
 		long waitTime;
 		long targetTime = 1000 / fps;
 		
-		Blob blob = new Blob(250, 250); ////////////
+		Blob blob = new Blob(250, 250, 3); ////////////
+		Blob blob2 = new Blob(100, 100, 4);
 		
 		while (running) {
 			startTime = System.nanoTime();
-			g.setColor(new Color(255, 255, 255));
+			g.setColor(new Color(200, 255, 255));
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			
 			//////////
 			g = Food.manageFood(g);
-			g = blob.draw(g);
-			blob.update();
+			
+			if (!blob.dead) {
+				g = blob.draw(g);
+				blob.update();
+			}
+			
+			if (!blob2.dead) {
+				g = blob2.draw(g);
+				blob2.update();
+			}
+			
 			//////////
 			
 			mainDraw();

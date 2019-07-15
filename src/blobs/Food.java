@@ -41,6 +41,7 @@ public class Food {
 	static Graphics2D manageFood(Graphics2D g) {
 		if (foodArray.size() == 0) {
 			makeFoodArray();
+			foodAmount -= 1;
 		}
 		
 		for (int i = 0; i < foodArray.size(); i++) {
