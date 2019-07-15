@@ -17,12 +17,14 @@ public class MainPanel extends JPanel implements Runnable{
 	private boolean running = true;
 	private BufferedImage image;
 	private Graphics2D g;
+	private int fps = 10;
 	
 	public MainPanel () {
 		super();
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setFocusable(true);	
 	}
+	
 	
 	public void addNotify() {
 		super.addNotify();
@@ -38,14 +40,34 @@ public class MainPanel extends JPanel implements Runnable{
 		g = (Graphics2D) image.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
+		//fps
+		long startTime;
+		long URDTimeMillis;
+		long waitTime;
+		long targetTime = 1000 / fps;
+		
+		Blob blob = new Blob(250, 250); ////////////
+		
 		while (running) {
+			startTime = System.nanoTime();
 			g.setColor(new Color(255, 255, 255));
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			
-			g.setColor(new Color(200, 200, 200));
-			g.fillOval(100, 100, 100, 100);
+			//////////
+			g = Food.manageFood(g);
+			g = blob.draw(g);
+			blob.update();
+			//////////
 			
 			mainDraw();
+			
+			//fps
+			URDTimeMillis = (System.nanoTime() - startTime) / 1000000;
+			waitTime = targetTime - URDTimeMillis;
+			try {
+				Thread.sleep(waitTime);
+			}
+			catch (Exception e) {}
 		
 		}
 	}
