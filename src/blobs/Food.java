@@ -13,15 +13,15 @@ public class Food {
 	public int x;
 	public int y;
 	
-	private Random rand = new Random(); 
+	public Random rand = new Random(); 
 	
 	public Food() {
 		makeRandomPosition();
 	}
 	
 	public void makeRandomPosition() {
-		this.x = rand.nextInt(500);
-		this.y = rand.nextInt(500);
+		this.x = rand.nextInt(MainPanel.WIDTH);
+		this.y = rand.nextInt(MainPanel.WIDTH);
 	}
 	
 	public Graphics2D draw(Graphics2D g) {
@@ -36,12 +36,16 @@ public class Food {
 	}
 	
 	static ArrayList<Food> foodArray = new ArrayList<Food>();
-	static int foodAmount = 20; 
+	static int foodAmount = 60;
+	static Random rand1 = new Random(); 
 	
 	static Graphics2D manageFood(Graphics2D g) {
 		if (foodArray.size() == 0) {
 			makeFoodArray();
-			foodAmount -= 1;
+		}
+		
+		if (foodArray.size() < foodAmount && rand1.nextInt(4) == 1) {
+			foodArray.add(new Food());
 		}
 		
 		for (int i = 0; i < foodArray.size(); i++) {

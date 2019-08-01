@@ -3,6 +3,15 @@ package blobs;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Random;
+
+
+// They have 3 things they can change
+// All stats max at 100
+
+//s * speed
+//a * max maxAge
+//r * reproductive chance
 
 public class Blob {
 	public Color color = new Color(200, 0, 0);
@@ -17,18 +26,27 @@ public class Blob {
 	public double health = 50;
 	public int maxHealth = width;
 	
-	double unit = 4;
+	int age = 0;
+	int foodEaten = 0;
 	
-	public Blob(int x, int y, double unit) {
+	int speed = 4;
+	int maxAge = 75;
+	int reChance = 0;
+	
+	public Blob(int x, int y, int speed, int maxAge, int reChance) {
 		this.x = x;
 		this.y = y;
-		this.unit = unit;
+		
+		this.speed = speed;
+		this.maxAge = maxAge;
+		this.reChance = reChance;
+		
 	}
 	
 	public Graphics2D draw(Graphics2D g) {
-		g.setColor(color);
-		g.fillOval((int) x - width/2, (int)  y - width/2, width, width);
-		
+	
+		g = drawBlob(g);
+		g = drawStats(g);
 		g = drawHealth(g);
 		
 		return g;
@@ -36,14 +54,23 @@ public class Blob {
 	
 	public void update() {
 		
-		findNearestFood();
-		manageHealth();
+		this.age += 1;
+		if (this.age / 16 > maxAge) {
+			this.dead = true;
+		}
+		
+		if (age > 80) {
+			findNearestFood();
+			manageHealth();
+			manageReproducing();
+		}
 		
 	}
 	
 	private void moveToFood(int x, int y) {
 		
-		double unit = this.unit;
+		double speed = (double) this.speed/100 * 5;
+		
 		double state = 1;
 		
 		double difX = x - this.x;
@@ -52,7 +79,7 @@ public class Blob {
 		// correcting
 		
 		if (difX < 0) {
-			unit = unit * -1;
+			speed = speed * -1;
 			state = -1;
 		}
 		if (difY < 0) {
@@ -66,8 +93,8 @@ public class Blob {
 		
 		double totalDif = difX + difY * state;
 		
-		double moveX = (difX / totalDif) * unit;
-		double moveY = (difY / totalDif) * unit;
+		double moveX = (difX / totalDif) * speed;
+		double moveY = (difY / totalDif) * speed;
 		
 		
 		if (!Double.isNaN(moveX) || !Double.isNaN(moveY)) {
@@ -91,6 +118,7 @@ public class Blob {
 			try {
 				Food.foodArray.remove(food);
 				this.health += 4;
+				this.foodEaten += 1;
 			} catch (Exception e) {}
 		}
 	}
@@ -142,6 +170,35 @@ public class Blob {
 		
 	}
 	
+	public void manageReproducing() {
+		if (rand.nextInt((100 - reChance) * 30) == 5 && this.health > 20 && this.foodEaten > 6) {
+			Blob.dublicate((int) this.x, (int) this.y, mutate(this.speed), mutate(this.maxAge), mutate(this.reChance));
+		}
+	}
+	
+	private int mutate(int number) {
+		
+		int newNumber = number + rand.nextInt(20) - 10;
+		
+		if (newNumber < 0 || newNumber > 99) {
+			newNumber = number;
+		}
+		
+		return newNumber;
+	}
+	
+	///////// Drawing //////////////
+	
+	public Graphics2D drawBlob(Graphics2D g) {
+		
+		this.color = new Color((int) (speed / 100 * 255), (int) (((double)maxAge / 100) * 255), (int) ((double)reChance / 100 * 255));
+		g.setColor(this.color);
+		
+		g.fillOval((int) x - width/2, (int)  y - width/2, width, width);
+		
+		return g;
+	}
+	
 	public Graphics2D drawHealth(Graphics2D g) {
 		
 		g.setColor(new Color(0, 0, 0));
@@ -157,5 +214,49 @@ public class Blob {
 		return g;
 	}
 	
+	public Graphics2D drawStats(Graphics2D g)  {
+		
+		g.setColor(new Color(0, 0, 0));
+		
+		g.drawString("s" + (int) speed, (int) this.x - 35, (int) this.y + 47);
+
+		g.drawString("a" + (int) maxAge, (int) this.x - 5, (int) this.y + 47);
+		
+		g.drawString("r" + (int) reChance, (int) this.x + 25, (int) this.y + 47);
+		
+		return g;
+	}
 	
+	
+	///////////// Static //////////////////////
+	
+	static Random rand = new Random(); 
+	
+	static ArrayList<Blob> blobArray = new ArrayList<Blob>();
+	static int blobAmount = 10; 
+	
+	static Graphics2D manageBlob(Graphics2D g) {
+		for (int i = 0; i < blobArray.size(); i++) {
+			if (!blobArray.get(i).dead) {
+				g = blobArray.get(i).draw(g);
+				blobArray.get(i).update();
+				
+			} else {
+				blobArray.remove(i);
+			}
+		}
+		
+		return g;
+	}
+	
+	static void makeBlobArray() {
+		for (int i = 0; i < blobAmount; i++) {
+			blobArray.add(new Blob(rand.nextInt(MainPanel.WIDTH), rand.nextInt(MainPanel.WIDTH), rand.nextInt(100), rand.nextInt(100), rand.nextInt(100)));
+		}
+		blobAmount = 1;
+	}
+	
+	static void dublicate(int x, int y, int speed, int maxAge, int reChance) {
+		blobArray.add(new Blob(x, y, speed, maxAge, reChance));
+	}
 }

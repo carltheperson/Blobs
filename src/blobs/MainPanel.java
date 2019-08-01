@@ -10,18 +10,18 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 public class MainPanel extends JPanel implements Runnable{
-	private int WIDTH = 500;
-	private int HEIGHT = 500;
+	public static int WIDTH = 800;
+	public static int HEIGHT = 800;
 	
 	private Thread thread;	
 	private boolean running = true;
 	private BufferedImage image;
 	private Graphics2D g;
-	private int fps = 60;
+	private int fps = 10000;
 	
 	public MainPanel () {
 		super();
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setPreferredSize(new Dimension(WIDTH + 500, HEIGHT));
 		setFocusable(true);	
 	}
 	
@@ -36,7 +36,7 @@ public class MainPanel extends JPanel implements Runnable{
 	
 	public void run() {
 		
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(WIDTH + 500, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -46,8 +46,8 @@ public class MainPanel extends JPanel implements Runnable{
 		long waitTime;
 		long targetTime = 1000 / fps;
 		
-		Blob blob = new Blob(250, 250, 3); ////////////
-		Blob blob2 = new Blob(100, 100, 4);
+		
+		Blob.makeBlobArray();
 		
 		while (running) {
 			startTime = System.nanoTime();
@@ -56,16 +56,8 @@ public class MainPanel extends JPanel implements Runnable{
 			
 			//////////
 			g = Food.manageFood(g);
-			
-			if (!blob.dead) {
-				g = blob.draw(g);
-				blob.update();
-			}
-			
-			if (!blob2.dead) {
-				g = blob2.draw(g);
-				blob2.update();
-			}
+			g = Blob.manageBlob(g);
+			g = Statistics.draw(g);
 			
 			//////////
 			
