@@ -44,7 +44,7 @@ public class Food {
 			makeFoodArray();
 		}
 		
-		if (foodArray.size() < foodAmount && rand1.nextInt(4) == 1) {
+		if (foodArray.size() < foodAmount && rand1.nextInt(8) == 1) {
 			foodArray.add(new Food());
 		}
 		

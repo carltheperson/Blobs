@@ -55,7 +55,7 @@ public class Blob {
 	public void update() {
 		
 		this.age += 1;
-		if (this.age / 16 > maxAge) {
+		if (this.age / 30 > maxAge) {
 			this.dead = true;
 		}
 		

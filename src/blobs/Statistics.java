@@ -2,6 +2,8 @@ package blobs;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.ArrayList;
 
 public class Statistics {
 
@@ -35,6 +37,10 @@ public class Statistics {
 		g.fillRect(rX, rY, 410, 20);
 		
 		
+		g.setColor(new Color(0, 0, 0));
+		g.drawString("Amount of blobs: " + Blob.blobArray.size(), MainPanel.WIDTH + 20, 300);
+		
+		
 		for (int i = 0; i < Blob.blobArray.size(); i++) {
 			// speed
 			g.setColor(Blob.blobArray.get(i).color);
@@ -58,6 +64,41 @@ public class Statistics {
 			g.drawLine(sX + 5, sY + 5, aX + 5, aY + 5);
 			g.drawLine(aX + 5, aY + 5, rX + 5, rY + 5);
 		}
+		
+		g = drawGraph(g);
+		
+		
+		return g;
+	}
+	
+	public static ArrayList<Point> points = new ArrayList<Point>();
+	public static int counter = 0;
+	
+	public static Graphics2D drawGraph (Graphics2D g) {
+		
+		counter++;
+		
+		
+		g.setColor(new Color(220, 220, 220));
+		g.fillRect(MainPanel.WIDTH + 20, 320, 460, 460);
+		
+		g.setColor(new Color(0, 0, 0));
+		
+		
+		if (counter == 8) {
+			points.add(new Point(MainPanel.WIDTH + 20, (int) (320 + (460 - ( (double) Blob.blobArray.size()/80) * 460))));
+			counter = 0;
+		}
+		
+		for (int i = 0; i < points.size(); i++) {
+			if (points.size() > 460) {
+				points.remove(0);
+			}
+			if (i + 1 < points.size()) {
+				g.drawLine(points.get(i).x + i, points.get(i).y, points.get(i + 1).x + i, points.get(i + 1).y);
+			}
+		}
+		
 		
 		
 		return g;

@@ -17,7 +17,7 @@ public class MainPanel extends JPanel implements Runnable{
 	private boolean running = true;
 	private BufferedImage image;
 	private Graphics2D g;
-	private int fps = 10000;
+	private int fps = 1000;
 	
 	public MainPanel () {
 		super();
