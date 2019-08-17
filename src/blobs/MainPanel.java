@@ -10,6 +10,12 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 public class MainPanel extends JPanel implements Runnable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	public static int WIDTH = 800;
 	public static int HEIGHT = 800;
 	
@@ -21,6 +27,7 @@ public class MainPanel extends JPanel implements Runnable{
 	
 	public MainPanel () {
 		super();
+		
 		setPreferredSize(new Dimension(WIDTH + 500, HEIGHT));
 		setFocusable(true);	
 	}
@@ -67,7 +74,7 @@ public class MainPanel extends JPanel implements Runnable{
 			URDTimeMillis = (System.nanoTime() - startTime) / 1000000;
 			waitTime = targetTime - URDTimeMillis;
 			try {
-				Thread.sleep(waitTime);
+				//Thread.sleep(waitTime);
 			}
 			catch (Exception e) {}
 		
