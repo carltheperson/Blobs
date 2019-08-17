@@ -2,7 +2,7 @@
 
 A Java evolution simulator with “blobs”, which are little circles with different traits (speed, max age and reproductive chance) that determine their color. Each time a blob duplicates it passes on it’s traits with small mutations. Watch your blobs evolve into the ultimate race.
 
-![](screenshot.png
+![](screenshot.png)
 
 
 ## How to Run
